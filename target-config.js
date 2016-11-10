@@ -40,6 +40,7 @@
       'src/position-handler.js',
       'src/shape-handler.js',
       'src/property-names.js',
+      'src/extension-api.js',
   ];
 
   var webAnimations1BonusSrc = [

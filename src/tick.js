@@ -117,6 +117,7 @@
   var pendingEffects = [];
   function applyPendingEffects() {
     pendingEffects.forEach(function(f) { f(); });
+    scope.callApplyHooks(pendingEffects);
     pendingEffects.length = 0;
   }
 

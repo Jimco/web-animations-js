@@ -50,6 +50,7 @@
     // This is needed to fake regular inline style CSSOM access on the element.
     this._surrogateStyle = document.createElementNS('http://www.w3.org/1999/xhtml', 'div').style;
     this._style = element.style;
+    this._customStyle = {};
     this._length = 0;
     this._isAnimatedProperty = {};
 
@@ -108,13 +109,33 @@
         });
       }
     },
+    _isNativeProperty: function(property) {
+      return property in this._surrogateStyle;
+    },
     _set: function(property, value) {
-      this._style[property] = value;
-      this._isAnimatedProperty[property] = true;
+      if (this._isNativeProperty(property)) {
+        this._style[property] = value;
+        this._isAnimatedProperty[property] = true;
+      } else {
+        this._customStyle[property] = value;
+      }
     },
     _clear: function(property) {
-      this._style[property] = this._surrogateStyle[property];
-      delete this._isAnimatedProperty[property];
+      if (this._isNativeProperty(property)) {
+        this._style[property] = this._surrogateStyle[property];
+        delete this._isAnimatedProperty[property];
+      } else {
+        delete this._customStyle[property];
+      }
+    },
+    _getAnimated: function(property) {
+      if (this._isNativeProperty(property)) {
+        return this._style[property];
+      }
+      return this._customStyle[property];
+    },
+    _animatedStyle: function() {
+      return this._style;
     },
   };
 
@@ -168,6 +189,12 @@
       };
       element.style._clear = function(property) {
         element.style[property] = '';
+      };
+      element.style._getAnimated = function(property) {
+        return element.style[property];
+      };
+      element.style._animatedStyle = function() {
+        return element.style;
       };
     }
 

@@ -34,6 +34,7 @@
       addPropertyHandler(parser, merger, toCamelCase(property));
     }
   }
+  scope.addPropertyHandler = addPropertyHandler;
   scope.addPropertiesHandler = addPropertiesHandler;
 
   var initialValues = {
