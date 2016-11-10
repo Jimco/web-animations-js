@@ -15,7 +15,6 @@ See design doc for now.
 
  - Support for targets other than `web-animations.dev.js`.
  - Support extended CSS properties that are natively supported by the browser.
- - registerApplyHook().
  - Final documentation.
 
 ### Quick and dirty example
