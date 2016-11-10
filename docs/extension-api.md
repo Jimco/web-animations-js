@@ -41,7 +41,7 @@ WebAnimationsPolyfillExtension.registerProperty({
       start: Number(start),
       end: Number(end),
       apply: function(value) {
-        return value|0;
+        return Math.round(value);
       },
     };
   },
@@ -57,9 +57,9 @@ WebAnimationsPolyfillExtension.addApplyHook({
   },
 });
 target.addEventListener('click', function() {
-  target.animate({pants: [100, 200]}, {
+  target.animate({pants: [255, 0]}, {
     duration: 1000,
-    delay: 100,
+    delay: 1000,
   });
 });
 </script>
