@@ -14,8 +14,8 @@ See design doc for now.
 ### To Be Done
 
  - Support for targets other than `web-animations.dev.js`.
- - Support extended CSS properties that are natively supported by the browser.
  - Final documentation.
+ - Tests.
 
 ### Quick and dirty example
 
