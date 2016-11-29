@@ -26,41 +26,50 @@ See design doc for now.
 #target {
   width: 100px;
   height: 100px;
-  background: blue;
+  background: black;
 }
 </style>
 <div id="target"></div>
 <script>
-WebAnimationsPolyfillExtension.registerProperty({
-  property: 'pants',
-  parse: function(value) {
-    return value;
-  },
-  merge: function(start, end) {
-    return {
-      start: Number(start),
-      end: Number(end),
-      apply: function(value) {
-        return Math.round(value);
+function quantize(x) {
+  return Math.round(Math.max(Math.min(x, 1), 0) * 255);
+}
+
+WebAnimationsPolyfillExtension.register({
+  name: 'test',
+  properties: {
+    heat: {
+      parse: function(value) {
+        return value;
       },
-    };
+      merge: function(start, end) {
+        return {
+          start: Number(start),
+          end: Number(end),
+          apply: function(value) {
+            return value;
+          },
+        };
+      },
+    },
   },
-});
-WebAnimationsPolyfillExtension.addApplyHook({
-  watchedProperties: ['pants'],
-  callback: function(watchedValues, style) {
-    if (watchedValues.pants == undefined) {
+  applyHook: function(values, style) {
+    var heat = values.heat;
+    if (heat == undefined) {
       style.backgroundColor = '';
-    } else {
-      style.backgroundColor = 'rgb(255, ' + watchedValues.pants + ', 0)';
+      return;
     }
+    var red = quantize(heat * 4);
+    var green = quantize(heat + Math.sin(heat * 20) / 8);
+    var blue = quantize(heat / 2);
+    style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
   },
 });
-target.addEventListener('click', function() {
-  target.animate({pants: [255, 0]}, {
-    duration: 1000,
-    delay: 1000,
-  });
+target.animate({heat: [0, 1]}, {
+  duration: 2000,
+  iterations: 2,
+  direction: 'alternate',
+  easing: 'ease-in',
 });
 </script>
 ```

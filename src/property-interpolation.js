@@ -23,6 +23,10 @@
     });
   }
 
+  function isRegisteredProperty(property) {
+    return property in propertyHandlers;
+  }
+
   function addPropertyHandler(parser, merger, property) {
     propertyHandlers[property] = propertyHandlers[property] || [];
     propertyHandlers[property].push([parser, merger]);
@@ -34,6 +38,7 @@
       addPropertyHandler(parser, merger, toCamelCase(property));
     }
   }
+  scope.isRegisteredProperty = isRegisteredProperty;
   scope.addPropertyHandler = addPropertyHandler;
   scope.addPropertiesHandler = addPropertiesHandler;
 

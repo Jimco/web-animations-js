@@ -18,8 +18,47 @@
     return;
   }
 
-  function registerProperty(params) {
-    console.assert(typeof params.property == 'string');
+  var extensions = {};
+  var applyHooks = [];
+
+  function register(params) {
+    console.assert(typeof params.name == 'string');
+    if (params.name in extensions) {
+      throw new Error('Extension already registered: ' + params.name);
+    }
+    extensions[params.name] = params;
+
+    if (params.properties) {
+      for (var property in params.properties) {
+        registerProperty(property, params.properties[property]);
+      }
+    }
+
+    if (params.applyHook) {
+      var applyHookParams = params.applyHook;
+      if (applyHookParams instanceof Function) {
+        applyHookParams = { callback: applyHookParams };
+      } else {
+        console.assert(applyHookParams.callback instanceof Function);
+      }
+
+      var watchedProperties = applyHookParams.watchedProperties || Object.keys(params.properties || {});
+
+      // TODO(alancutter): Support runAfter and runBefore.
+      applyHooks.push({
+        watchedProperties: watchedProperties,
+        callback: applyHookParams.callback,
+      });
+    }
+  }
+
+  function registerProperty(property, params) {
+    if (property == 'offset' || property == 'composite' || property == 'easing') {
+      throw new Error('Attempted to register disallowed property name: ' + property);
+    }
+    if (scope.isRegisteredProperty(property)) {
+      throw new Error('Property already registered: ' + property);
+    }
     console.assert(params.parse instanceof Function);
     console.assert(params.merge instanceof Function);
     // TODO(alancutter): Make addPropertyHandler's merge function work like the
@@ -28,14 +67,7 @@
       var result = params.merge(start, end);
       return [result.start, result.end, result.apply];
     }
-    scope.addPropertyHandler(params.parse, merge, params.property);
-  }
-
-  var applyHooks = [];
-  function addApplyHook(params) {
-    console.assert(params.watchedProperties instanceof Array);
-    console.assert(params.callback instanceof Function);
-    applyHooks.push(params);
+    scope.addPropertyHandler(params.parse, merge, property);
   }
 
   function callApplyHooks(effects) {
@@ -50,6 +82,7 @@
         applyHook.watchedProperties.forEach(function(property) {
           watchedValues[property] = style._getAnimated(property);
         });
+        // TODO(alancutter): Avoid calling apply hooks if watched values haven't changed.
         applyHook.callback(watchedValues, style._animatedStyle());
       })
     })
@@ -58,7 +91,6 @@
   scope.callApplyHooks = callApplyHooks;
 
   window.WebAnimationsPolyfillExtension = {
-    registerProperty: registerProperty,
-    addApplyHook: addApplyHook,
+    register: register,
   };
 })(webAnimations1);
