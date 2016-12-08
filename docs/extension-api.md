@@ -53,7 +53,7 @@ WebAnimationsPolyfillExtension.register({
       },
     },
   },
-  applyHook: function(values, style) {
+  applyHook: function(values) {
     var heat = values.heat;
     if (heat == undefined) {
       return null;

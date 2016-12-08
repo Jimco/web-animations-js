@@ -65,7 +65,7 @@
     // extension API and avoid this format conversion function.
     function merge(start, end) {
       var result = params.merge(start, end);
-      return [result.start, result.end, result.serialise];
+      return [result.start, result.end, result.serialize];
     }
     scope.addPropertyHandler(params.parse, merge, property);
   }
