@@ -115,10 +115,13 @@
   };
 
   var pendingEffects = [];
+  var pendingEffectSet = {};
   function applyPendingEffects() {
+    scope.clearApplyHooks(pendingEffectSet);
     pendingEffects.forEach(function(f) { f(); });
-    scope.callApplyHooks(pendingEffects);
+    scope.callApplyHooks(pendingEffectSet);
     pendingEffects.length = 0;
+    pendingEffectSet = {};
   }
 
   var t60hz = 1000 / 60;
@@ -137,15 +140,17 @@
     var activeAnimations = [];
     var inactiveAnimations = [];
     updatingAnimations.forEach(function(animation) {
+      var effect = animation._effect;
       animation._tick(t, isAnimationFrame);
 
       if (!animation._inEffect) {
-        newPendingClears.push(animation._effect);
+        newPendingClears.push(effect);
         animation._unmarkTarget();
       } else {
-        newPendingEffects.push(animation._effect);
+        newPendingEffects.push(effect);
         animation._markTarget();
       }
+      pendingEffectSet[effect._internalId] = effect;
 
       if (animation._needsTick)
         ticking = true;

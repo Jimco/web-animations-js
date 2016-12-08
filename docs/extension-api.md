@@ -46,7 +46,7 @@ WebAnimationsPolyfillExtension.register({
         return {
           start: Number(start),
           end: Number(end),
-          apply: function(value) {
+          serialize: function(value) {
             return value;
           },
         };
@@ -56,13 +56,14 @@ WebAnimationsPolyfillExtension.register({
   applyHook: function(values, style) {
     var heat = values.heat;
     if (heat == undefined) {
-      style.backgroundColor = '';
-      return;
+      return null;
     }
     var red = quantize(heat * 4);
     var green = quantize(heat + Math.sin(heat * 20) / 8);
     var blue = quantize(heat / 2);
-    style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+    return {
+      backgroundColor: `rgb(${red}, ${green}, ${blue})`,
+    };
   },
 });
 target.animate({heat: [0, 1]}, {

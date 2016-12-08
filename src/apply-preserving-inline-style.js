@@ -123,9 +123,6 @@
     _getAnimated: function(property) {
       return this._style[property];
     },
-    _animatedStyle: function() {
-      return this._style;
-    },
   };
 
   // Wrap the style methods.
@@ -181,9 +178,6 @@
       };
       element.style._getAnimated = function(property) {
         return element.style[property];
-      };
-      element.style._animatedStyle = function() {
-        return element.style;
       };
     }
 

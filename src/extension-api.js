@@ -65,15 +65,30 @@
     // extension API and avoid this format conversion function.
     function merge(start, end) {
       var result = params.merge(start, end);
-      return [result.start, result.end, result.apply];
+      return [result.start, result.end, result.serialise];
     }
     scope.addPropertyHandler(params.parse, merge, property);
   }
 
-  function callApplyHooks(effects) {
-    applyHooks.forEach(function(applyHook) {
-      // TODO(alancutter): Avoid calling apply hooks multiple times per effect target.
-      effects.forEach(function(effect) {
+  function clearApplyHooks(effectSet) {
+    for (var id in effectSet) {
+      var effect = effectSet[id];
+      applyHooks.forEach(function(applyHook) {
+        var style = effect._target.style;
+        if (!style._applyHookAffectedProperties) {
+          return;
+        }
+        for (var property in style._applyHookAffectedProperties) {
+          style._clear(property);
+        }
+      });
+    }
+  };
+
+  function callApplyHooks(effectSet) {
+    for (var id in effectSet) {
+      var effect = effectSet[id];
+      applyHooks.forEach(function(applyHook) {
         if (!effect._target._webAnimationsPatchedStyle) {
           return;
         }
@@ -83,11 +98,21 @@
           watchedValues[property] = style._getAnimated(property);
         });
         // TODO(alancutter): Avoid calling apply hooks if watched values haven't changed.
-        applyHook.callback(watchedValues, style._animatedStyle());
-      })
-    })
+        var newValues = applyHook.callback(watchedValues);
+        if (!newValues) {
+          return;
+        }
+        var affectedProperties = style._applyHookAffectedProperties || {};
+        style._applyHookAffectedProperties = affectedProperties;
+        for (var property in newValues) {
+          style._set(property, newValues[property]);
+          affectedProperties[property] = true;
+        }
+      });
+    }
   };
 
+  scope.clearApplyHooks = clearApplyHooks;
   scope.callApplyHooks = callApplyHooks;
 
   window.WebAnimationsPolyfillExtension = {

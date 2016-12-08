@@ -25,6 +25,7 @@
     return effectTime;
   }
 
+  var nextInternalId = 0;
   scope.KeyframeEffect = function(target, effectInput, timingInput, id) {
     var effectTime = EffectTime(shared.normalizeTimingInput(timingInput));
     var interpolations = scope.convertEffectInput(effectInput);
@@ -47,6 +48,7 @@
     keyframeEffect._target = target;
     keyframeEffect._totalDuration = effectTime._totalDuration;
     keyframeEffect._id = id;
+    keyframeEffect._internalId = nextInternalId++;
     return keyframeEffect;
   };
 
