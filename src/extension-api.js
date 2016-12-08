@@ -71,9 +71,9 @@
   }
 
   function clearApplyHooks(effectSet) {
-    for (var id in effectSet) {
-      var effect = effectSet[id];
-      applyHooks.forEach(function(applyHook) {
+    applyHooks.forEach(function(applyHook) {
+      for (var id in effectSet) {
+        var effect = effectSet[id];
         var style = effect._target.style;
         if (!style._applyHookAffectedProperties) {
           return;
@@ -81,14 +81,14 @@
         for (var property in style._applyHookAffectedProperties) {
           style._clear(property);
         }
-      });
-    }
+      }
+    });
   };
 
   function callApplyHooks(effectSet) {
-    for (var id in effectSet) {
-      var effect = effectSet[id];
-      applyHooks.forEach(function(applyHook) {
+    applyHooks.forEach(function(applyHook) {
+      for (var id in effectSet) {
+        var effect = effectSet[id];
         if (!effect._target._webAnimationsPatchedStyle) {
           return;
         }
@@ -108,8 +108,8 @@
           style._set(property, newValues[property]);
           affectedProperties[property] = true;
         }
-      });
-    }
+      }
+    });
   };
 
   scope.clearApplyHooks = clearApplyHooks;
