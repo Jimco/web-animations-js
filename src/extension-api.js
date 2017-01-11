@@ -98,7 +98,7 @@
           watchedValues[property] = style._getAnimated(property);
         });
         // TODO(alancutter): Avoid calling apply hooks if watched values haven't changed.
-        var newValues = applyHook.callback(watchedValues);
+        var newValues = applyHook.callback(watchedValues, effect._target);
         if (!newValues) {
           return;
         }
