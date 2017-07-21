@@ -113,11 +113,7 @@
       this._isAnimatedProperty[property] = true;
     },
     _clear: function(property) {
-      if (property in this._surrogateStyle) {
-        this._style[property] = this._surrogateStyle[property];
-      } else {
-        delete this._style[property];
-      }
+      this._style[property] = this._surrogateStyle[property];
       delete this._isAnimatedProperty[property];
     },
     _getAnimated: function(property) {
