@@ -149,7 +149,11 @@
       }
     },
     _clear: function(property) {
-      this._style[property] = this._surrogateStyle[property];
+      if (property in this._surrogateStyle) {
+        this._style[property] = this._surrogateStyle[property];
+      } else {
+        delete this._style[property];
+      }
       if (this._updateSvgTransformAttr &&
           scope.unprefixedPropertyName(property) == 'transform') {
         if (this._savedTransformAttr) {
