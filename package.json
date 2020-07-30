@@ -36,12 +36,13 @@
     "karma-sauce-launcher": "~0.2.3",
     "grunt-checkrepo": "~0.1.0",
     "grunt-saucelabs": "~4.0.2",
-    "grunt-checkrepo": "~0.1.0",
     "grunt-git-status": "~1.0.0",
     "grunt-template": "~0.2.3",
-    "source-map": "~0.1.40"
+    "source-map": "~0.1.40",
+    "uglify-js": "^3.0.15"
   },
   "scripts": {
+    "build": "cat tools/pre.js tools/scope.js $(cat src/fileOrder.txt) tools/post.js | uglifyjs > web-animations.min.js",
     "test": "grunt web-animations web-animations-next test gjslint git-status checkrepo"
   }
 }
