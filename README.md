@@ -48,7 +48,7 @@ Documentation
 * [Examples of usage](/docs/examples.md)
 * [Live demos](https://web-animations.github.io/web-animations-demos)
 * [MDN reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate)
-* [W3C specification](http://w3c.github.io/web-animations/)
+* [W3C specification](https://drafts.csswg.org/web-animations/)
 * [Polyfill extension API](/docs/extension-api.md)
 
 We love feedback!
