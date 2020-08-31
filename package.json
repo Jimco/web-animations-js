@@ -44,6 +44,7 @@
   },
   "scripts": {
     "build": "cat tools/pre.js tools/scope.js $(cat src/fileOrder.txt) tools/post.js | uglifyjs > web-animations.min.js",
+    "publish": "npm run build && npm publish",
     "test": "grunt web-animations web-animations-next test gjslint git-status checkrepo"
   }
 }

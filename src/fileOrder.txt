@@ -6,7 +6,6 @@ src/keyframe-interpolations.js
 src/property-interpolation.js
 src/keyframe-effect.js
 src/apply-preserving-inline-style.js
-src/element-animatable.js
 src/interpolation.js
 src/matrix-interpolation.js
 src/animation.js
@@ -25,5 +24,6 @@ src/position-handler.js
 src/shape-handler.js
 src/property-names.js
 src/extension-api.js
+src/element-animatable.js
 src/web-animations-bonus-cancel-events.js
 src/web-animations-bonus-object-form-keyframes.js
