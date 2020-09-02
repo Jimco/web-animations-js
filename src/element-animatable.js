@@ -13,17 +13,17 @@
 // limitations under the License.
 
 (function(scope) {
-  function isPropertySupported(property) {
-    if (property in document.body.style) return true;
-    var prefixes = ['Moz', 'Webkit', 'O', 'ms', 'Khtml'];
-    var prefProperty = property.charAt(0).toUpperCase() + property.substr(1);
+  // function isPropertySupported(property) {
+  //   if (property in document.body.style) return true;
+  //   var prefixes = ['Moz', 'Webkit', 'O', 'ms', 'Khtml'];
+  //   var prefProperty = property.charAt(0).toUpperCase() + property.substr(1);
 
-    for (var i = 0; i < prefixes.length; i++) {
-      if ((prefixes[i] + prefProperty) in document.body.style) return true;
-    }
+  //   for (var i = 0; i < prefixes.length; i++) {
+  //     if ((prefixes[i] + prefProperty) in document.body.style) return true;
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   function isWebAnimationsApiSupported() {
     if (document.documentElement.animate) {
@@ -47,19 +47,21 @@
   var isAnimationsApiSupported = isWebAnimationsApiSupported();
   var originalElementAnimate = window.Element.prototype.animate;
   // var isOffsetPathSupported = isPropertySupported('offset-path');
-  var isOffsetPathSupported = false;
 
   window.Element.prototype.animate = function(effectInput, options) {
-    var hasOffsetPathProperty = ~JSON.stringify(effectInput).indexOf('offsetPath')
-
     if (
-        !isAnimationsApiSupported
-          || (!isOffsetPathSupported && hasOffsetPathProperty)
-      ) {
+      !isAnimationsApiSupported
+        || (options && options.forceJsExcute)
+    ) {
       var id = '';
       if (options && options.id) {
         id = options.id;
       }
+
+      try {
+        delete options.forceJsExcute;
+      } catch (e) { }
+
       return scope.timeline._play(scope.KeyframeEffect(this, effectInput, options, id));
     }
 
