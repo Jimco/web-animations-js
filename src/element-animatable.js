@@ -13,17 +13,17 @@
 // limitations under the License.
 
 (function(scope) {
-  // function isPropertySupported(property) {
-  //   if (property in document.body.style) return true;
-  //   var prefixes = ['Moz', 'Webkit', 'O', 'ms', 'Khtml'];
-  //   var prefProperty = property.charAt(0).toUpperCase() + property.substr(1);
+  function isPropertySupported(property) {
+    if (property in document.body.style) return true;
+    var prefixes = ['Moz', 'Webkit', 'O', 'ms', 'Khtml'];
+    var prefProperty = property.charAt(0).toUpperCase() + property.substr(1);
 
-  //   for (var i = 0; i < prefixes.length; i++) {
-  //     if ((prefixes[i] + prefProperty) in document.body.style) return true;
-  //   }
+    for (var i = 0; i < prefixes.length; i++) {
+      if ((prefixes[i] + prefProperty) in document.body.style) return true;
+    }
 
-  //   return false;
-  // }
+    return false;
+  }
 
   function isWebAnimationsApiSupported() {
     if (document.documentElement.animate) {
@@ -45,13 +45,16 @@
   }
 
   var isAnimationsApiSupported = isWebAnimationsApiSupported();
+  var isOffsetPathSupported = isPropertySupported('offset-path');
   var originalElementAnimate = window.Element.prototype.animate;
-  // var isOffsetPathSupported = isPropertySupported('offset-path');
 
   window.Element.prototype.animate = function(effectInput, options) {
+    var hasOffsetPathProperty = ~JSON.stringify(effectInput).indexOf('offsetPath');
+
     if (
       !isAnimationsApiSupported
         || (options && options.forceJsExcute)
+        || (hasOffsetPathProperty && !isOffsetPathSupported)
     ) {
       var id = '';
       if (options && options.id) {
